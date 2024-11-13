@@ -1,3 +1,4 @@
+import 'package:agri_connect/feature.dart';
 import 'package:agri_connect/placebid.dart';
 import 'package:agri_connect/rentalpage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,8 +6,13 @@ import 'package:flutter/material.dart';
 // ignore: depend_on_referenced_packages
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:agri_connect/rentaldetail.dart';
+import 'auction.dart'; // Import Auction Detail Page
+import 'feature.dart';
+import 'product.dart'; // Import Product Detail Page
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -16,9 +22,9 @@ class _HomePageState extends State<HomePage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Fetching collections from Firestore
-  Stream<QuerySnapshot> _auctionStream = FirebaseFirestore.instance.collection('auctions').snapshots();
-  Stream<QuerySnapshot> _availableProductStream = FirebaseFirestore.instance.collection('available_product').snapshots();
-  Stream<QuerySnapshot> _featuredProductStream = FirebaseFirestore.instance.collection('product_sales').snapshots();
+  final Stream<QuerySnapshot> _auctionStream = FirebaseFirestore.instance.collection('auctions').snapshots();
+  final Stream<QuerySnapshot> _availableProductStream = FirebaseFirestore.instance.collection('available_product').snapshots();
+  final Stream<QuerySnapshot> _featuredProductStream = FirebaseFirestore.instance.collection('product_sales').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +46,8 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-        
     });
   }
-  
 
   // Home page content with auctions, available products, and featured products
   Widget _buildHomePage() {
@@ -71,35 +75,58 @@ class _HomePageState extends State<HomePage> {
         }
 
         var auctions = snapshot.data!.docs;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Upcoming Auctions', style: TextStyle(fontSize: 20)),
-            ),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: auctions.length,
-                itemBuilder: (context, index) {
-                  var auction = auctions[index];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Upcoming Auctions', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: auctions.map((auction) {
                   return GestureDetector(
-                    onTap: () => _showAuctionPopup(auction),
+                    onTap: () {
+                      // Navigate to Auction Detail Page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AuctionDetailPage(auction: auction, auctionId: '',),
+                        ),
+                      );
+                    },
                     child: Card(
-                      child: CachedNetworkImage(
-                        imageUrl: auction['url'],
-                        height: 150,
+                      elevation: 5,
+                      child: Container(
                         width: 150,
-                        fit: BoxFit.cover,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: auction['url'],
+                              width: double.infinity,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                auction['name'],
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
-                },
+                }).toList(),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -118,35 +145,58 @@ class _HomePageState extends State<HomePage> {
         }
 
         var products = snapshot.data!.docs;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Available Products', style: TextStyle(fontSize: 20)),
-            ),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  var product = products[index];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Available Products', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: products.map((product) {
                   return GestureDetector(
-                    onTap: () => _showProductPopup(product),
+                    onTap: () {
+                      // Navigate to Product Detail Page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductDetailPage(product: product),
+                        ),
+                      );
+                    },
                     child: Card(
-                      child: CachedNetworkImage(
-                        imageUrl: product['url'],
-                        height: 150,
+                      elevation: 5,
+                      child: Container(
                         width: 150,
-                        fit: BoxFit.cover,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: product['url'],
+                              width: double.infinity,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                product['name'],
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
-                },
+                }).toList(),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -165,124 +215,55 @@ class _HomePageState extends State<HomePage> {
         }
 
         var products = snapshot.data!.docs;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Featured Products', style: TextStyle(fontSize: 20)),
-            ),
-            Container(
-              height: 200,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  var product = products[index];
-                  return GestureDetector(
-                    onTap: () => _showFeaturedProductPopup(product),
-                    child: Card(
-                      child: CachedNetworkImage(
-                        imageUrl: product['url'],
-                        height: 150,
-                        width: 150,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // Show auction details in a pop-up
-  // 
-  void _showAuctionPopup(DocumentSnapshot auction) {
-  DateTime startTime = (auction['starting_time'] as Timestamp).toDate();
-  DateTime endTime = (auction['ending_time'] as Timestamp).toDate();
-  DateTime currentTime = DateTime.now();
-
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        content: SingleChildScrollView(
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CachedNetworkImage(imageUrl: auction['url'], width: double.infinity),
-              SizedBox(height: 10),
-              Text('Name: ${auction['name']}', style: TextStyle(fontSize: 16)),
-              Text('Description: ${auction['description']}', style: TextStyle(fontSize: 16)),
-              Text('Starting Price: \$${auction['starting_price']}', style: TextStyle(fontSize: 16)),
-              Text('Start Time: ${startTime.toLocal()}'.split(' ')[0], style: TextStyle(fontSize: 16)),
-              Text('End Time: ${endTime.toLocal()}'.split(' ')[0], style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
-              if (currentTime.isAfter(startTime) && currentTime.isBefore(endTime))
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close the popup
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => PlaceBidPage(auction: auction),
+              Text('Featured Products', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: products.map((product) {
+                  return GestureDetector(
+                    onTap: () {
+                      // Navigate to Featured Product Detail Page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FeaturedProductDetailPage(product: product, productId: '',),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 5,
+                      child: Container(
+                        width: 150,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: product['url'],
+                              width: double.infinity,
+                              height: 120,
+                              fit: BoxFit.cover,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                product['name'],
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                  child: Text('Place Bid'),
-                ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-
-
-  // Show available product details in a pop-up
-  void _showProductPopup(DocumentSnapshot product) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CachedNetworkImage(imageUrl: product['url'], width: double.infinity),
-              SizedBox(height: 10),
-              Text('Name: ${product['name']}', style: TextStyle(fontSize: 16)),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  // Show featured product details in a pop-up
-  void _showFeaturedProductPopup(DocumentSnapshot product) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CachedNetworkImage(imageUrl: product['url'], width: double.infinity),
-              SizedBox(height: 10),
-              Text('Name: ${product['name']}', style: TextStyle(fontSize: 16)),
-              Text('Price: \$${product['Price']}', style: TextStyle(fontSize: 16)),
-              Text('Quantity: ${product['Quantity']}', style: TextStyle(fontSize: 16)),
-              SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle purchase logic
-                  print('Buy Now');
-                },
-                child: Text('Buy'),
+                    ),
+                  );
+                }).toList(),
               ),
             ],
           ),

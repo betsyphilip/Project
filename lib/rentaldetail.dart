@@ -8,7 +8,7 @@ class RentalDetailPage extends StatelessWidget {
   final DocumentSnapshot rentalItem;
 
   // Constructor to receive the selected rental item
-  const RentalDetailPage({required this.rentalItem});
+  const RentalDetailPage({super.key, required this.rentalItem, required DocumentSnapshot<Object?> product});
 
   @override
   Widget build(BuildContext context) {

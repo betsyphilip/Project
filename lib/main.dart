@@ -32,6 +32,8 @@ class MyApp extends StatelessWidget {
   }
 }
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Example splash screen before navigating to the login page

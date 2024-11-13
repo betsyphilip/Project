@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class RentalPage extends StatefulWidget {
+  const RentalPage({super.key});
+
   @override
   _RentalPageState createState() => _RentalPageState();
 }
@@ -11,7 +13,7 @@ class _RentalPageState extends State<RentalPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Stream to fetch rental items from Firestore
-  Stream<QuerySnapshot> _rentalStream = FirebaseFirestore.instance.collection('rentals').snapshots();
+  final Stream<QuerySnapshot> _rentalStream = FirebaseFirestore.instance.collection('rentals').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +65,7 @@ class _RentalPageState extends State<RentalPage> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Price: \$${price}/day', style: TextStyle(fontSize: 16)),
+            Text('Price: \$$price/day', style: TextStyle(fontSize: 16)),
             Text('Available from: $availableFrom', style: TextStyle(fontSize: 14)),
             Text('Available to: $availableTo', style: TextStyle(fontSize: 14)),
           ],
@@ -93,7 +95,7 @@ class _RentalPageState extends State<RentalPage> {
 class RentalDetailPage extends StatelessWidget {
   final DocumentSnapshot rentalItem;
 
-  RentalDetailPage({required this.rentalItem});
+  const RentalDetailPage({super.key, required this.rentalItem});
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +121,7 @@ class RentalDetailPage extends StatelessWidget {
             SizedBox(height: 10),
             Text('Name: $name', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             SizedBox(height: 10),
-            Text('Price: \$${price}/day', style: TextStyle(fontSize: 16)),
+            Text('Price: \$$price/day', style: TextStyle(fontSize: 16)),
             SizedBox(height: 10),
             Text('Available from: $availableFrom', style: TextStyle(fontSize: 14)),
             SizedBox(height: 10),

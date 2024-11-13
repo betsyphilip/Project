@@ -1,24 +1,52 @@
-plugins {
-  id("com.android.application") version "7.3.0" apply false
-  // ...
+// plugins {
+//   id("com.android.application") version "7.3.0" apply false
+//   // ...
 
-  // Add the dependency for the Google services Gradle plugin
-  id("com.google.gms.google-services") version "4.4.2" apply false
+//   // Add the dependency for the Google services Gradle plugin
+//   id("com.google.gms.google-services") version "4.4.2" apply false
+// }
+// allprojects {
+//     repositories {
+//         google()
+//         mavenCentral()
+//     }
+//     dependencies{
+//         classpath "com.android.tools.build:gradle:8.0.0"
+//     }
+// }
+
+// rootProject.buildDir = "../build"
+// subprojects {
+//     project.buildDir = "${rootProject.buildDir}/${project.name}"
+// }
+// subprojects {
+//     project.evaluationDependsOn(":app")
+// }
+
+// tasks.register("clean", Delete) {
+//     delete rootProject.buildDir
+// }
+plugins {
+    id("com.android.application") version "8.0.0" apply false
+    id("com.google.gms.google-services") version "4.4.2" apply false
 }
+
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
-    dependencies{
-        classpath "com.android.tools.build:gradle:8.0.0"
-    }
+    // Remove this block to avoid version conflict
+    // dependencies {
+    //     classpath "com.android.tools.build:gradle:8.0.0"
+    // }
 }
 
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }

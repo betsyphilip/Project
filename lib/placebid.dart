@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class PlaceBidPage extends StatefulWidget {
   final DocumentSnapshot auction;
 
-  PlaceBidPage({required this.auction});
+  const PlaceBidPage({super.key, required this.auction});
 
   @override
   _PlaceBidPageState createState() => _PlaceBidPageState();

@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RoleSelectionPage extends StatefulWidget {
+  const RoleSelectionPage({super.key});
+
   @override
   _RoleSelectionPageState createState() => _RoleSelectionPageState();
 }
@@ -146,6 +148,8 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
 // Placeholder for different registration pages for each role
 
 class FarmerRegistrationPage extends StatelessWidget {
+  const FarmerRegistrationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,6 +160,8 @@ class FarmerRegistrationPage extends StatelessWidget {
 }
 
 class CompanyRegistrationPage extends StatelessWidget {
+  const CompanyRegistrationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -166,6 +172,8 @@ class CompanyRegistrationPage extends StatelessWidget {
 }
 
 class CustomerRegistrationPage extends StatelessWidget {
+  const CustomerRegistrationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,6 +184,8 @@ class CustomerRegistrationPage extends StatelessWidget {
 }
 
 class LaborerRegistrationPage extends StatelessWidget {
+  const LaborerRegistrationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
